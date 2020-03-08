@@ -11,7 +11,6 @@ import (
 	"fmt"
 	"os"
 	"reflect"
-	"strconv"
 
 	"github.com/BurntSushi/toml"
 )
@@ -63,83 +62,13 @@ func parseDefaultValues(options interface{}) (err error) {
 			continue
 		}
 		fieldVal := val.FieldByName(field.Name)
-		v, err := strconvParse(dval, fieldVal.Type().Name())
+		v, err := strconvParse(dval, fieldVal.Type())
 		if err != nil {
 			continue
 		}
 		fieldVal.Set(reflect.ValueOf(v))
 	}
 	return nil
-}
-
-func strconvParse(str string, typ string) (interface{}, error) {
-	switch typ {
-	case "string":
-		return str, nil
-	case "int16":
-		v, err := strconv.ParseInt(str, 10, 16)
-		if err != nil {
-			return int16(0), err
-		}
-		return int16(v), nil
-	case "uint16":
-		v, err := strconv.ParseUint(str, 10, 16)
-		if err != nil {
-			return uint16(0), err
-		}
-		return uint16(v), nil
-	case "int":
-		v, err := strconv.ParseInt(str, 10, 64)
-		if err != nil {
-			return int(0), err
-		}
-		return int(v), nil
-	case "uint":
-		v, err := strconv.ParseUint(str, 10, 64)
-		if err != nil {
-			return uint(0), err
-		}
-		return uint(v), nil
-	case "uint32":
-		v, err := strconv.ParseUint(str, 10, 32)
-		if err != nil {
-			return uint32(0), err
-		}
-		return uint32(v), nil
-	case "int32":
-		v, err := strconv.ParseInt(str, 10, 64)
-		if err != nil {
-			return int32(0), err
-		}
-		return int32(v), nil
-	case "int64":
-		v, err := strconv.ParseInt(str, 10, 64)
-		if err != nil {
-			return int64(0), err
-		}
-		return int64(v), nil
-	case "uint64":
-		v, err := strconv.ParseUint(str, 10, 64)
-		if err != nil {
-			return uint64(0), err
-		}
-		return uint64(v), nil
-	case "float32":
-		v, err := strconv.ParseFloat(str, 32)
-		if err != nil {
-			return float32(0), err
-		}
-		return float32(v), nil
-	case "float64":
-		v, err := strconv.ParseFloat(str, 64)
-		if err != nil {
-			return float64(0), err
-		}
-		return float64(v), nil
-	default:
-		return str, errUnknownStrconvType
-	}
-	return str, errUnknownStrconvType
 }
 
 func parseConfigFile(options interface{}) (err error) {
@@ -201,6 +130,7 @@ func parseFlags(options interface{}) (err error) {
 			fs.String(sflagKey, dval, flagHelp)
 		}
 	}
+
 	fs.Parse(args)
 
 	// build option from Flag in FlagSet.formal
@@ -211,20 +141,13 @@ func parseFlags(options interface{}) (err error) {
 		if flagKey == "" && sflagKey == "" {
 			continue
 		}
-
 		fieldVal := val.FieldByName(field.Name)
-		sf := fs.Lookup(sflagKey)
-		if sf != nil {
-			if sf.Value.String() != sf.DefValue {
-				sv, _ := strconvParse(sf.Value.String(), fieldVal.Type().Name())
+		fs.Visit(func(f *flag.Flag) {
+			if f.Name == flagKey || f.Name == sflagKey {
+				sv, _ := strconvParse(f.Value.String(), fieldVal.Type())
 				fieldVal.Set(reflect.ValueOf(sv))
 			}
-		}
-		f := fs.Lookup(flagKey)
-		if f.Value.String() != f.DefValue {
-			v, _ := strconvParse(f.Value.String(), fieldVal.Type().Name())
-			fieldVal.Set(reflect.ValueOf(v))
-		}
+		})
 	}
 
 	return nil

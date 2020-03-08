@@ -19,7 +19,7 @@
 * command line with flags(-h for short and --host for long) if they are there. a New method will return  an UserOptions
 * with default value of tag "default" .  tag "help" will see in flag's help message
 *
-* Note: czoptions will take a flag name "-c" "--config"
-*
+* Note: czoptions will take a flag name "-c" "--config" for config file
+*  and "-h" "--help" for help
  */
 package options
