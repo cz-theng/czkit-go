@@ -33,7 +33,7 @@ func Parse(options interface{}) (err error) {
 		fmt.Printf("[ERROR]:%s", err.Error())
 		return err
 	}
-	fmt.Printf("parseDefaultValues:%v\n", options)
+	//fmt.Printf("parseDefaultValues:%v\n", options)
 
 	err = parseConfigFile(options)
 	if err != nil {
@@ -41,7 +41,7 @@ func Parse(options interface{}) (err error) {
 		fmt.Printf("[ERROR]:%s", err.Error())
 		return err
 	}
-	fmt.Printf("parseConfigFile:%v\n", options)
+	//fmt.Printf("parseConfigFile:%v\n", options)
 
 	err = parseFlags(options)
 	if err != nil {
@@ -49,7 +49,7 @@ func Parse(options interface{}) (err error) {
 		fmt.Printf("[ERROR]:%s", err.Error())
 		return err
 	}
-	fmt.Printf("parseFlags:%v\n", options)
+	//fmt.Printf("parseFlags:%v\n", options)
 
 	return nil
 }
