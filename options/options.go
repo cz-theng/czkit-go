@@ -33,6 +33,7 @@ func Parse(options interface{}) (err error) {
 		fmt.Printf("[ERROR]:%s", err.Error())
 		return err
 	}
+	fmt.Printf("parseDefaultValues:%v\n", options)
 
 	err = parseConfigFile(options)
 	if err != nil {
@@ -40,6 +41,7 @@ func Parse(options interface{}) (err error) {
 		fmt.Printf("[ERROR]:%s", err.Error())
 		return err
 	}
+	fmt.Printf("parseConfigFile:%v\n", options)
 
 	err = parseFlags(options)
 	if err != nil {
@@ -47,6 +49,7 @@ func Parse(options interface{}) (err error) {
 		fmt.Printf("[ERROR]:%s", err.Error())
 		return err
 	}
+	fmt.Printf("parseFlags:%v\n", options)
 
 	return nil
 }
@@ -54,16 +57,22 @@ func Parse(options interface{}) (err error) {
 func parseDefaultValues(options interface{}) (err error) {
 	val := reflect.ValueOf(options).Elem()
 	typ := val.Type()
-
 	for i := 0; i < typ.NumField(); i++ {
 		field := typ.Field(i)
 		dval := field.Tag.Get("default")
-		if dval == "" {
-			continue
-		}
 		fieldVal := val.FieldByName(field.Name)
 		v, err := strconvParse(dval, fieldVal.Type())
 		if err != nil {
+			//  Recursively resolve embedded types.
+			var fieldPtr reflect.Value
+			fmt.Printf("fieldVal:%v  Elem:\n", fieldVal.Type())
+			if fieldVal.Type().Kind() == reflect.Struct {
+				fieldPtr = fieldVal.Addr()
+				if !fieldPtr.IsNil() {
+					err = parseDefaultValues(fieldPtr.Interface())
+				}
+			}
+
 			continue
 		}
 		fieldVal.Set(reflect.ValueOf(v))
