@@ -67,6 +67,7 @@ func Init(opts ...Option) error {
 	}
 	core := zapcore.NewCore(encoder, ws, zap.NewAtomicLevelAt(_logcat.opts.logLevel))
 
+	// TODO: add caller/tracer/callerskip
 	_logcat.zsl = zap.New(core).Sugar()
 	return nil
 
