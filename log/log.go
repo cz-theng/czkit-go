@@ -14,14 +14,9 @@ type logcat struct {
 	opts options
 }
 
-var _logcat logcat
-
-func init() {
-	// for not Init test
-	_logcat = logcat{
-		zsl:  zap.NewExample().Sugar(),
-		opts: defaultOptions(),
-	}
+var _logcat = logcat{
+	zsl:  zap.NewExample().Sugar(),
+	opts: defaultOptions(),
 }
 
 // Init create and init a zap SugarLogger
