@@ -1,4 +1,4 @@
-module github.com/cz-it/czkit
+module github.com/cz-theng/czkit
 
 go 1.14
 
