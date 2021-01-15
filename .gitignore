@@ -17,4 +17,5 @@ commit.sh
 czkit-go.code-workspace
 .vscode
 .DS_Store
+log/log.log
 
