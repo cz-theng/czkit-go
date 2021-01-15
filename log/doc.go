@@ -7,6 +7,7 @@
 * package log wraped Uber's zap and use lumberjack.v2 to  rolling files.
 * this wrap will use zap's suger API if you want use Logger,use zap directly.
 * and here Info for Suger's Infof Infow for Suger's Infow
+* 
 **/
 
 package log
