@@ -1,8 +1,14 @@
 package app
 
 import (
+	"log"
+	"os"
+
+	"github.com/cz-theng/czkit-go/cmd/app/asset"
 	"github.com/spf13/cobra"
 )
+
+//go:generate go-bindata -o=app/asset/asset.go -pkg=asset test/...
 
 var (
 	_initFlag bool
@@ -27,6 +33,26 @@ func _main(cmd *cobra.Command, args []string) {
 	}
 }
 
+func exists(path string) bool {
+	_, err := os.Stat(path)
+	if err != nil {
+		if os.IsExist(err) {
+			return true
+		}
+		return false
+	}
+	return true
+}
+
 func createAndInitDir() {
 
+	if !exists("./cmd") {
+		if err := os.Mkdir("cmd", os.ModePerm); err != nil {
+			log.Fatal("create directory cmd error")
+		}
+	}
+
+	if err := asset.RestoreAssets("./cmd", "test"); err != nil {
+		log.Fatalf("expand asset error:%s", err.Error())
+	}
 }
