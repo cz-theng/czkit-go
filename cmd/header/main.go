@@ -56,13 +56,15 @@ var (
 var headerTpl = template.Must(template.New("").Parse(`
 // Copyright {{.Author}}©{{.Year}} All rights reserved.
 // Author: {{.Author}} {{.Mail}}
-// license that can be found in the LICENSE fil
+// license that can be found in the LICENSE file
 
 `[1:]))
 
 type info struct {
 	file string
 	Year int64
+	Author string
+	Mail string
 }
 
 func init() {
@@ -178,7 +180,12 @@ func isGenerated(file string) bool {
 
 // fileInfo finds the lowest year in which the given file was committed.
 func fileInfo(file string) (*info, error) {
-	info := &info{file: file, Year: int64(time.Now().Year())}
+	info := &info{
+		file: file, 
+		Year: int64(time.Now().Year()),
+		Mail: _mail,
+		Author: _author,
+	}
 	cmd := exec.Command("git", "log", "--follow", "--find-renames=80", "--find-copies=80", "--pretty=format:%ai", "--", file)
 	err := doLines(cmd, func(line string) {
 		y, err := strconv.ParseInt(line[:4], 10, 64)
