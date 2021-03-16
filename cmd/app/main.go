@@ -14,7 +14,7 @@ var (
 	_initFlag bool
 )
 
-var AppCMD = &cobra.Command{
+var CMD = &cobra.Command{
 	Use:   "app",
 	Short: "create an app templment",
 	Long:  `create an app templment`,
@@ -22,7 +22,7 @@ var AppCMD = &cobra.Command{
 }
 
 func init() {
-	AppCMD.PersistentFlags().BoolVarP(&_initFlag, "init", "i", false, "create and init an app templement")
+	CMD.PersistentFlags().BoolVarP(&_initFlag, "init", "i", false, "create and init an app templement")
 
 }
 
