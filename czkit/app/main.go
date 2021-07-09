@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/cz-theng/czkit-go/cmd/app/asset"
+	"github.com/cz-theng/czkit-go/czkit/app/asset"
 	"github.com/spf13/cobra"
 )
 

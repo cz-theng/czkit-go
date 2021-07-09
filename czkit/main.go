@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/cz-theng/czkit-go"
-	"github.com/cz-theng/czkit-go/cmd/app"
-	"github.com/cz-theng/czkit-go/cmd/header"
+	"github.com/cz-theng/czkit-go/czkit/app"
+	"github.com/cz-theng/czkit-go/czkit/header"
 	"github.com/spf13/cobra"
 )
 
