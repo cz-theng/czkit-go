@@ -11,7 +11,7 @@ import (
 var panicWriter io.Writer = os.Stderr
 
 // CatchPanic catch panic and logs panics.
-func CatchPanic(err *error) {
+func CatchPanic(err *error, msg string) {
 	_, file, line, ok := runtime.Caller(2)
 	if !ok {
 		file = "???"
@@ -19,5 +19,5 @@ func CatchPanic(err *error) {
 	}
 	r := recover()
 	fmt.Fprintf(panicWriter, "cauth panic: %v\n%s\n", r, debug.Stack())
-	*err = fmt.Errorf("panic at [%s:%d]: %s", file, line, r)
+	*err = fmt.Errorf("[PANIC] %s [%s:%d]: %s", msg, file, line, r)
 }

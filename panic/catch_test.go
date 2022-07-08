@@ -4,12 +4,12 @@ import (
 	"testing"
 )
 
-func Panic() (err error) {
-	defer CatchPanic(&err)
+func causePanic() (err error) {
+	defer CatchPanic(&err, "cause panic")
 	panic("TestCatchPanic")
 }
 
 func TestCatchPanic(t *testing.T) {
-	err := Panic()
+	err := causePanic()
 	t.Log(err)
 }
