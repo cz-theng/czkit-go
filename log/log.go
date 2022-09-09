@@ -10,8 +10,9 @@ import (
 )
 
 type logcat struct {
-	zsl  *zap.SugaredLogger
-	opts options
+	zsl    *zap.SugaredLogger
+	logger *zap.Logger
+	opts   options
 }
 
 var _logcat = logcat{
@@ -62,9 +63,18 @@ func Init(opts ...Option) error {
 	}
 	core := zapcore.NewCore(encoder, ws, zap.NewAtomicLevelAt(_logcat.opts.logLevel))
 
-	_logcat.zsl = zap.New(core, zap.AddCaller(), zap.AddCallerSkip(1)).Sugar()
+	_logcat.logger = zap.New(core, zap.AddCaller(), zap.AddCallerSkip(1))
+	_logcat.zsl = _logcat.logger.Sugar()
 	return nil
 
+}
+
+func ZapSuger() *zap.SugaredLogger {
+	return _logcat.zsl
+}
+
+func ZapLogger() *zap.Logger {
+	return _logcat.logger
 }
 
 // Sync sync all log to disk
