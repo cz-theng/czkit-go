@@ -39,7 +39,7 @@ func Init(opts ...Option) error {
 		LevelKey:       "level",
 		NameKey:        "logger",
 		CallerKey:      "caller",
-		FunctionKey:    zapcore.OmitKey,
+		FunctionKey:    "func",
 		MessageKey:     "msg",
 		StacktraceKey:  "stacktrace",
 		LineEnding:     zapcore.DefaultLineEnding,
@@ -62,8 +62,7 @@ func Init(opts ...Option) error {
 	}
 	core := zapcore.NewCore(encoder, ws, zap.NewAtomicLevelAt(_logcat.opts.logLevel))
 
-	// TODO: add caller/tracer/callerskip
-	_logcat.zsl = zap.New(core).Sugar()
+	_logcat.zsl = zap.New(core, zap.AddCaller(), zap.AddCallerSkip(1)).Sugar()
 	return nil
 
 }
