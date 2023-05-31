@@ -22,12 +22,13 @@ const (
 )
 
 type options struct {
-	logPath    string
-	logName    string
-	logLevel   zapcore.Level
-	maxLogSize uint32
-	compress   bool
-	console    bool
+	logPath     string
+	logName     string
+	logLevel    zapcore.Level
+	maxLogSize  uint32
+	compress    bool
+	console     bool
+	onlyConsole bool
 }
 
 func defaultOptions() options {
@@ -99,5 +100,12 @@ func WithCompress(compress bool) Option {
 func WithConsole(console bool) Option {
 	return newFuncOption(func(o *options) {
 		o.console = console
+	})
+}
+
+// WithOnlyConsole determines weather output to console
+func WithOnlyConsole(console bool) Option {
+	return newFuncOption(func(o *options) {
+		o.onlyConsole = console
 	})
 }

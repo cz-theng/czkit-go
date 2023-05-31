@@ -51,15 +51,21 @@ func Init(opts ...Option) error {
 	}
 	encoder := zapcore.NewJSONEncoder(encoderCfg)
 	var ws zapcore.WriteSyncer
-	if _logcat.opts.console {
+	if _logcat.opts.onlyConsole {
 		ws = zapcore.NewMultiWriteSyncer(
 			zapcore.AddSync(os.Stdout),
-			zapcore.AddSync(&fileSync),
 		)
 	} else {
-		ws = zapcore.NewMultiWriteSyncer(
-			zapcore.AddSync(&fileSync),
-		)
+		if _logcat.opts.console {
+			ws = zapcore.NewMultiWriteSyncer(
+				zapcore.AddSync(os.Stdout),
+				zapcore.AddSync(&fileSync),
+			)
+		} else {
+			ws = zapcore.NewMultiWriteSyncer(
+				zapcore.AddSync(&fileSync),
+			)
+		}
 	}
 	core := zapcore.NewCore(encoder, ws, zap.NewAtomicLevelAt(_logcat.opts.logLevel))
 
